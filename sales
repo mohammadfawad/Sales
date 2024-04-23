@@ -1,0 +1,272 @@
+-- MySQL dump 10.13  Distrib 5.5.9, for Win32 (x86)
+--
+-- Host: localhost    Database: sales
+-- ------------------------------------------------------
+-- Server version	5.5.13
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Current Database: `sales`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `sales` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+USE `sales`;
+
+--
+-- Table structure for table `cashiers`
+--
+
+DROP TABLE IF EXISTS `cashiers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cashiers` (
+  `ID` int(11) NOT NULL,
+  `Name` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cashiers`
+--
+
+LOCK TABLES `cashiers` WRITE;
+/*!40000 ALTER TABLE `cashiers` DISABLE KEYS */;
+INSERT INTO `cashiers` VALUES (1,'Asad'),(2,'Saif');
+/*!40000 ALTER TABLE `cashiers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `categories`
+--
+
+DROP TABLE IF EXISTS `categories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `categories` (
+  `ID` int(11) NOT NULL,
+  `Name` varchar(45) NOT NULL,
+  `Rank` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `categories`
+--
+
+LOCK TABLES `categories` WRITE;
+/*!40000 ALTER TABLE `categories` DISABLE KEYS */;
+/*!40000 ALTER TABLE `categories` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customers`
+--
+
+DROP TABLE IF EXISTS `customers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customers` (
+  `ID` int(11) NOT NULL,
+  `Name` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customers`
+--
+
+LOCK TABLES `customers` WRITE;
+/*!40000 ALTER TABLE `customers` DISABLE KEYS */;
+INSERT INTO `customers` VALUES (1,'Imran'),(2,'Ali'),(3,'Qasam');
+/*!40000 ALTER TABLE `customers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `items`
+--
+
+DROP TABLE IF EXISTS `items`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `items` (
+  `Code` int(11) NOT NULL,
+  `Name` varchar(45) NOT NULL,
+  `Price` float NOT NULL,
+  `Rank` int(11) DEFAULT NULL,
+  `Description` varchar(150) DEFAULT NULL,
+  `ImageURL` varchar(150) DEFAULT NULL,
+  `CID` int(11) NOT NULL,
+  PRIMARY KEY (`Code`),
+  KEY `CID` (`CID`),
+  CONSTRAINT `CID` FOREIGN KEY (`CID`) REFERENCES `categories` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `items`
+--
+
+LOCK TABLES `items` WRITE;
+/*!40000 ALTER TABLE `items` DISABLE KEYS */;
+/*!40000 ALTER TABLE `items` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `itemssuppliers`
+--
+
+DROP TABLE IF EXISTS `itemssuppliers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itemssuppliers` (
+  `ItemCode` int(11) NOT NULL,
+  `SupplierID` int(11) NOT NULL,
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`ID`,`ItemCode`,`SupplierID`),
+  KEY `SupplierID` (`SupplierID`),
+  CONSTRAINT `SupplierID` FOREIGN KEY (`SupplierID`) REFERENCES `suppliers` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `itemssuppliers`
+--
+
+LOCK TABLES `itemssuppliers` WRITE;
+/*!40000 ALTER TABLE `itemssuppliers` DISABLE KEYS */;
+/*!40000 ALTER TABLE `itemssuppliers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `saledetails`
+--
+
+DROP TABLE IF EXISTS `saledetails`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `saledetails` (
+  `RecieptNumber` int(11) NOT NULL,
+  `SNo` int(11) NOT NULL,
+  `ItemCode` int(11) NOT NULL,
+  `Quantity` int(11) NOT NULL,
+  PRIMARY KEY (`RecieptNumber`,`SNo`),
+  KEY `RecieptNumber` (`RecieptNumber`),
+  KEY `ItemCode` (`ItemCode`),
+  CONSTRAINT `ItemCode` FOREIGN KEY (`ItemCode`) REFERENCES `items` (`Code`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `RecieptNumber` FOREIGN KEY (`RecieptNumber`) REFERENCES `sales` (`RecieptNumber`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `saledetails`
+--
+
+LOCK TABLES `saledetails` WRITE;
+/*!40000 ALTER TABLE `saledetails` DISABLE KEYS */;
+/*!40000 ALTER TABLE `saledetails` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sales`
+--
+
+DROP TABLE IF EXISTS `sales`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sales` (
+  `RecieptNumber` int(11) NOT NULL,
+  `SaleDate` datetime NOT NULL,
+  `CustomerID` int(11) NOT NULL,
+  `CashierID` int(11) NOT NULL,
+  `SalesPersonID` int(11) NOT NULL,
+  PRIMARY KEY (`RecieptNumber`),
+  KEY `CashierID` (`CashierID`),
+  KEY `CustomerID` (`CustomerID`),
+  KEY `SalePersonID` (`SalesPersonID`),
+  CONSTRAINT `CashierID` FOREIGN KEY (`CashierID`) REFERENCES `cashiers` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `CustomerID` FOREIGN KEY (`CustomerID`) REFERENCES `customers` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `SalePersonID` FOREIGN KEY (`SalesPersonID`) REFERENCES `salespersons` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sales`
+--
+
+LOCK TABLES `sales` WRITE;
+/*!40000 ALTER TABLE `sales` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sales` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `salespersons`
+--
+
+DROP TABLE IF EXISTS `salespersons`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `salespersons` (
+  `ID` int(11) NOT NULL,
+  `Name` varchar(45) NOT NULL,
+  `CommissionRate` float NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `salespersons`
+--
+
+LOCK TABLES `salespersons` WRITE;
+/*!40000 ALTER TABLE `salespersons` DISABLE KEYS */;
+INSERT INTO `salespersons` VALUES (1,'Adnan',0.06),(2,'Imran',0.05);
+/*!40000 ALTER TABLE `salespersons` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `suppliers`
+--
+
+DROP TABLE IF EXISTS `suppliers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `suppliers` (
+  `ID` int(11) NOT NULL,
+  `Name` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `suppliers`
+--
+
+LOCK TABLES `suppliers` WRITE;
+/*!40000 ALTER TABLE `suppliers` DISABLE KEYS */;
+/*!40000 ALTER TABLE `suppliers` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2014-01-27 22:44:16
